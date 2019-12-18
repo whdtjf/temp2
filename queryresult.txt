@@ -1,0 +1,6 @@
+FileSystemWallet {
+  storesInitialized: false,
+  walletMixin: X509WalletMixin {},
+  path: '/data/Hyperprov/enterance_app/enterance-app/wallet' }
+2019-11-13T12:08:07.445Z - [33mwarn[39m: [Query]: evaluate: Query ID "[object Object]" of peer "peer1.org1.ptunstad.no:7051" failed: message=Failed to connect before the deadline URL:grpc://localhost:7051, stack=Error: Failed to connect before the deadline URL:grpc://localhost:7051
+    at checkState (/data/Hyperprov/enterance_app/enterance-app/node_modules/fabric-network/node_modules/grpc/src/client.js:835:16), connectFailed=true

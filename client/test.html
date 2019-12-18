@@ -1,0 +1,123 @@
+<!DOCTYPE html5>
+<html>
+  <head>
+    <link data-require="bootstrap@4.0.5" data-semver="4.0.5" rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" >
+    <script data-require="bootstrap@4.0.5" data-semver="4.0.5" src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.5/js/bootstrap.min.js"></script>
+    <script data-require="angularjs@1.5.7" data-semver="1.5.7" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular.min.js"></script>
+    <script src="fakeApp.js" charset="UTF-8"></script>
+    <title>Hyper Shield : 블록체인 기반의 출입 관리 시스템</title>
+    <script> //if(!sessionStorage.getItem('uID')) location.href="/"; </script>
+		<script> let userData = {Key:2013122041, name:"김영찬", timestamp:Date.now()} </script>
+  </head>
+
+  <body style="margin:0px 0px 0px 0px; height:100%" ng-app="fakeApplication" ng-controller="fakeAppController">
+    <table width="100%" style="height:100%; margin:0px 0px 0px 0px; border-collapse:collapse;">
+      <tr width="100%" height="20%">
+        <td bgcolor="#2E1257" style= "width:30%;min-width:180px border-collapse:collapse;" align="center" rowspan="3">
+
+          <table width="100%" height="100%">
+            <tr height="30%"><td align="center">
+                <table width="90%">
+                  <tr>
+                    <td width="30%"><img src="./img/icon/default.png" width="100%" style="min-width:100px" id="uImage"></td>
+                    <td width="5%"></td>
+                    <td width="75%">
+                      <font size="4"><div id='username'></div></font><font size="1"><br></font>
+                      &nbsp;&nbsp;<font color="white">등급 : 관리자 </font><font size="1"><br><br><br></font>
+                      <div align = "right"><button class="btn btn-primary" id="logout">로그아웃</button></div>
+                      <script>
+                        let userName = document.getElementById('username');
+                        userName.innerHTML = "<font color='yellow' size='5'>"+userData.name
+                          +"</font><font color='white'>님, 반갑습니다!</font>";
+                        let userImage = document.getElementById('uImage');
+                        userImage.src = "./img/icon/" + userData.Key + ".png";
+                        let logoutBtn = document.getElementById('logout');
+                        logoutBtn.onclick = () => {
+                          sessionStorage.removeItem('uID');
+                          sessionStorage.removeItem('uNAME');
+                          location.href="/";
+                        };
+                      </script>
+                    </td>
+                  </tr>
+                </table>
+
+            </td></tr>
+            <tr height="50%"><td valign = "top" align="center">
+                <font color="white">
+                  <div style="width:90%">
+                    <h2>&nbsp;최근 출입 기록</h2>
+                    <hr style="border: solid 1px white;" width="90%">
+                  </div>
+                  <table width="90%" style="color:#BAB8DB">
+                    <tr align="center">
+                      <td><font size="4" color="white" width="60%" height="35px"><b>출입 시간</b></font></td>
+                      <td><font size="4" color="white" width="20%" height="35px"><b>디바이스</b></font></td>
+                      <td><font size="4" color="white" width="20%" height="35px"><b>입장/퇴장</b></font></td>
+                    </tr>
+                    <tr ng-repeat="temp in queryHistoryTop10()" align="center">
+                      <td height="35px">{{temp.timestamp}}</td>
+                      <td height="35px">{{temp.location}}</td>
+                      <td height="35px"><span ng-show="temp.state == 'in'">&nbsp;입장</span><span ng-show="temp.state == 'out'">&nbsp;퇴장</span></td>
+                    </tr>
+                  </table>
+                </font>
+            </td></tr>
+            <tr height="20%"><td align="center" valign="bottom">
+                <font color="gray">
+                  2019 한국 항공대학교 한정희 교수님 종합설계<br>
+                  <font size="2">임베디드 시스템 기반의 하이퍼레져를 이용한 출입 관제 시스템<br></font><br>
+                  <font color="white" size="4">정지원 이승준 김영찬 안종화</font><br>
+                  <font color="yellow">HYPER SHILED 1.0.0 ver</font>
+                </font>
+                <br><br>
+            </td></tr>
+
+          </table>
+        </td>
+
+        <td height="20%" style="margin:0px 0px 0px 0px;padding:0px 50px 30px 50px;
+              border-collapse:collapse;
+              background-image:url('./img/bg3.png');
+              background-position:center center;
+              background-size: 100%" align="left" valign="bottom">
+                <b><font color="white" size="7"><div id ="titleName">
+                  메인 페이지
+                </div></font></b>
+        </td>
+      </tr>
+      <tr height="4%" bgcolor="#272822">
+        <td>
+          <table width="100%" style="color:white;">
+            <tr>
+              <td width="20%" align="center"><div class="menu" id="menu0">메인 페이지</div></td>
+              <td width="20%" align="center"><div class="menu" id="menu1">일별 출입량</div></td>
+              <td width="20%" align="center"><div class="menu" id="menu2">월별 출입량</div></td>
+              <td width="20%" align="center"><div class="menu" id="menu3">개인 페이지</div></td>
+              <td width="20%" align="center"><div class="menu" id="menu4">사용자 관리</div></td>
+              <script>
+                let menu0 = document.getElementById('menu0');
+                let menu1 = document.getElementById('menu1');
+                let menu2 = document.getElementById('menu2');
+                let menu3 = document.getElementById('menu3');
+                let menu4 = document.getElementById('menu4');
+
+                menu0.onclick = () => {location.href="/mainPage";};
+                menu1.onclick = () => {location.href="/dailyLog";};
+                menu2.onclick = () => {location.href="/monthlyLog";};
+                menu3.onclick = () => {location.href="/personalPage";};
+                menu4.onclick = () => {location.href="/userManage";};
+
+              </script>
+            </tr>
+          </table>
+        </td>
+      </tr>
+
+      <tr>
+        <td align="center" height="76%">
+        </td>
+      </tr>
+    </table>
+  </body>
+  </html>

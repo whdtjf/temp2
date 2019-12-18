@@ -1,0 +1,400 @@
+<!DOCTYPE html5>
+<html>
+  <head>
+    <link data-require="bootstrap@4.0.5" data-semver="4.0.5" rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" >
+    <script data-require="bootstrap@4.0.5" data-semver="4.0.5" src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.5/js/bootstrap.min.js"></script>
+    <script data-require="angularjs@1.5.7" data-semver="1.5.7" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular.min.js"></script>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <link rel="stylesheet" href="styleMainPage.css">
+    <script src="mainPageApp.js" charset="UTF-8"></script>
+    <title>Hyper Shield : 블록체인 기반의 출입 관리 시스템</title>
+		<script>
+      let userData = {};
+      try{
+        userData = {key:sessionStorage.getItem('uID').replace(/["]/g,''), name:sessionStorage.getItem('uNAME')};
+      } catch(e) {
+        location.href="/";
+      }
+      let reDraw;
+    </script>
+  </head>
+
+  <body style="margin:0px 0px 0px 0px; height:100%" ng-app="application" ng-controller="appController">
+    <table width="100%" style="height:100%; margin:0px 0px 0px 0px; border-collapse:collapse;">
+      <tr width="100%" height="20%">
+        <td bgcolor="#2E1257" style= "width:30%;min-width:180px border-collapse:collapse;" align="center" rowspan="3">
+
+					<table width="100%" height="100%">
+						<tr height="30%"><td align="center">
+								<table width="90%">
+									<tr>
+										<td width="30%"><img src="./img/icon/default.png" width="100%" style="min-width:100px" id="uImage"></td>
+										<td width="5%"></td>
+										<td width="75%">
+											<font size="4"><div id='username'></div></font><font size="1"><br></font>
+											&nbsp;&nbsp;<font color="white">등급 : 관리자 </font><font size="1"><br><br><br></font>
+											<div align = "right"><button class="btn btn-primary" id="logout">로그아웃</button></div>
+						          <script>
+						            let userName = document.getElementById('username');
+						            userName.innerHTML = "<font color='yellow' size='5'>"+userData.name
+													+"</font><font color='white'>님, 반갑습니다!</font>";
+												let userImage = document.getElementById('uImage');
+												userImage.src = "./img/icon/" + userData.key + ".png";
+												let logoutBtn = document.getElementById('logout');
+                        logoutBtn.onclick = () => {
+                          sessionStorage.removeItem('uID');
+                          sessionStorage.removeItem('uNAME');
+                          location.href="/";
+                        };
+						          </script>
+										</td>
+									</tr>
+								</table>
+
+						</td></tr>
+						<tr height="50%"><td valign = "top" align="center">
+								<font color="white">
+                  <div style="width:90%">
+                    <h2>&nbsp;최근 출입 기록</h2>
+                    <hr style="border: solid 1px white;" width="90%">
+                  </div>
+                  <table width="90%" style="color:#BAB8DB">
+                    <tr align="center">
+                      <td><font size="4" color="white" width="60%" height="35px"><b>출입 시간</b></font></td>
+                      <td><font size="4" color="white" width="20%" height="35px"><b>디바이스</b></font></td>
+                      <td><font size="4" color="white" width="20%" height="35px"><b>입장/퇴장</b></font></td>
+                    </tr>
+                    <tr ng-repeat="temp in queryHistoryTop8_result" align="center">
+                      <td height="35px">{{temp.timestamp}}</td>
+                      <td height="35px">{{temp.location}}</td>
+                      <td height="35px">
+                        <span ng-show="temp.state == 'IN'">&nbsp;<font color="#A4FFA3">입장</font></span>
+                        <span ng-show="temp.state == 'OUT'">&nbsp;<font color="#FF7D6F">퇴장</font></span>
+                        <span ng-show="temp.state == 'GENERATED'">&nbsp;<font color="#A4FFA3">가입</font></span>
+                        <span ng-show="temp.state == 'EXPIRED'">&nbsp;<font color="#FF7D6F">탈퇴</font></span>
+                      </td>
+                    </tr>
+                  </table>
+								</font>
+						</td></tr>
+						<tr height="20%"><td align="center" valign="bottom">
+								<font color="gray">
+									2019 한국 항공대학교 한정희 교수님 종합설계<br>
+									<font size="2">임베디드 시스템 기반의 하이퍼레져를 이용한 출입 관제 시스템<br></font><br>
+									<font color="white" size="4">정지원 이승준 김영찬 안종화</font><br>
+									<font color="yellow">HYPER SHILED 1.0.0 ver</font>
+								</font>
+								<br><br>
+						</td></tr>
+
+					</table>
+        </td>
+
+        <td height="80px" style="margin:0px 0px 0px 0px;padding:0px 50px 30px 50px;
+							border-collapse:collapse;
+							background-image:url('./img/bg3.png');
+							background-position:center center;
+							background-size: 100%" align="left" valign="bottom">
+								<b><font color="white" size="7"><div id ="titleName">
+									메인 페이지
+								</div></font></b>
+        </td>
+      </tr>
+			<tr height="8px" bgcolor="#272822">
+				<td>
+          <table width="100%" style="color:white;">
+            <tr>
+              <td width="25%" align="center"><div class="menu" id="menu0">메인 페이지</div></td>
+              <td width="25%" align="center"><div class="menu" id="menu1">일별 출입량</div></td>
+              <td width="25%" align="center"><div class="menu" id="menu3">개인 페이지</div></td>
+              <td width="25%" align="center"><div class="menu" id="menu4">사용자 관리</div></td>
+              <script>
+                let menu0 = document.getElementById('menu0');
+                let menu1 = document.getElementById('menu1');
+                let menu3 = document.getElementById('menu3');
+                let menu4 = document.getElementById('menu4');
+
+                menu0.onclick = () => {location.href="/mainPage";};
+                menu1.onclick = () => {location.href="/dailyLog";};
+                menu3.onclick = () => {location.href="/personalPage";};
+                menu4.onclick = () => {location.href="/userManage";};
+
+              </script>
+            </tr>
+          </table>
+				</td>
+			</tr>
+
+			<tr>
+				<td align="center" height="76%">
+          <div style="width:100%;height:100%;padding:10px 10px;">
+
+            <table height="100%" width="90%">
+              <tr>
+                <td width="59%" height="20%" align="left" valign="top" style="border-bottom:5px solid #CCDAE6; padding-top:10px;">
+                  <font style="font-size: 30px;">
+                    <b>게이트별 사용 통계</b>
+                  </font>
+                  <div class="searchTotalBox" align="center">
+                    <img src="./img/searchBtn.png" width="25px" height="25px" style="margin:0px;padding:0px;" onclick="searchBtnClick()">
+                    <input type="date" value="2019-10-10" class="dateField scroll" id="userSelectDate">
+                    <script>
+                      let userSelectDate = document.getElementById('userSelectDate')
+
+                      userSelectDate.onfocus = () => {
+                        userSelectDate.classList.remove('scroll')
+                      }
+
+                      userSelectDate.onclick = () => {
+                        userSelectDate.classList.remove('scroll')
+                      }
+
+                      userSelectDate.onblur = () => {
+                        if(!Date.parse(userSelectDate.value)){
+                          userSelectDate.classList.add('scroll')
+                        }
+                      }
+
+                      let searchBtnClick = () => {
+                        if(Date.parse(userSelectDate.value)){
+                          let temp = userSelectDate.value.split('-')
+                          timeStr = Number(temp[0]) + '-'+ Number(temp[1]) + '-' +Number(temp[2])
+                          reDraw();
+                        }
+                      }
+                    </script>
+                  </div><br />
+                  <table style="border:1px solid white;margin:10px;" class="inOutTable" width="100%">
+                    <tr height="30px">
+                      <td align="center" bgcolor="#2D4059" colspan="4" width="50%"><font color="white"><b>GATE A</b></font></td>
+                      <td align="center" bgcolor="#2D4059" colspan="4" width="50%"><font color="white"><b>GATE B</b></font></td>
+                    </tr>
+                    <tr heigth="20px">
+                      <td bgcolor="#6A98D4" align="center" width="12.5%"><font color="white">입장</font></td>
+                      <td bgcolor="#FFFFFF" align="center" width="12.5%"><div id="A_in" align="center"></div></font></td>
+                      <td bgcolor="#6A98D4" align="center" width="12.5%"><font color="white">퇴장</font></td>
+                      <td bgcolor="#FFFFFF" align="center" width="12.5%"><div id="A_out" align="center"></div></font></td>
+                      <td bgcolor="#6A98D4" align="center" width="12.5%"><font color="white">입장</font></td>
+                      <td bgcolor="#FFFFFF" align="center" width="12.5%"><div id="B_in" align="center"></div></font></td>
+                      <td bgcolor="#6A98D4" align="center" width="12.5%"><font color="white">퇴장</font></td>
+                      <td bgcolor="#FFFFFF" align="center" width="12.5%"><div id="B_out" align="center"></div></font></td>
+                    </tr>
+                  </table>
+                </td>
+		<td width="1%" rowspan="2"></td>
+                <td rowspan="2" width="40%">
+                  <table width="100%" height="100%">
+                    <tr>
+                      <td height="5%">
+                        <div style="border-left:10px solid #4A78E8;padding:10px; width:100%;font-size:16px;background-image:linear-gradient(90deg,#BDBCE8,#FFFFFF)">
+                           <b>GATE B 출입 현황</b> <div id="targetDate1" style={font-size:10px;display:inline;}></div></div>
+                        </div>
+                      </td>
+                    </tr><tr>
+                      <td height="40%">
+                        <div onmouseover="hovermouseA()"
+                             onmouseout="outmouse()"
+                             id="chart-gateA"
+                             style="width:100%;height:100%;padding:0px;margin:0px;border-left:10px solid #81A6FF;background-image:linear-gradient(90deg,#D1D1EB,#FFFFFF)">
+                        </div>
+                      </td>
+                    </tr>
+                    <tr width="100%">
+                      <td height="5%">
+                  			<div style="border-left:10px solid #4A78E8;padding:10px; width:100%;font-size:16px;background-image:linear-gradient(90deg,#BDBCE8,#FFFFFF)">
+                  				<b>GATE B 출입 현황</b> <div id="targetDate2" style={font-size:10px;display:inline;}></div></div>
+		                  </td>
+                    </tr><tr>
+                      <td height="40%">
+                        <div onmouseover="hovermouseB()"
+                             onmouseout="outmouse()"
+                             id="chart-gateB"
+                             style="width:100%;height:100%;padding:0px;margin:0px;border-left:10px solid #81A6FF;background-image:linear-gradient(90deg,#D1D1EB,#FFFFFF)">
+                        </div>
+                      </td>
+                    </tr>
+
+                  </table>
+                </td>
+              </tr>
+
+              <tr>
+                <td width="59%" height="80%" align="center" valign="middle">
+		              <div style="width:100%;height:100%;overflow:hidden; vertical-align:middle;">
+                    <div id="locationDiv"style="font-size:16px;font-weight:bold;margin-top:20px;background-color:#CCDAE6;padding:5px;">
+                    </div>
+                    <br /><img src="./img/map.png" id="map" width="90%">
+		              </div>
+                </td>
+              </tr>
+
+            </table>
+	        </div>
+
+
+          <script>
+          let map = document.getElementById('map');
+          let hovermouseA = () => { map.src = "./img/map_A.png"; }
+          let hovermouseB = () => { map.src = "./img/map_B.png"; }
+          let outmouse = () => { map.src = "./img/map.png"; }
+
+          let currentTime = new Date();
+
+          let timeStr = currentTime.getFullYear() + "-" + (currentTime.getMonth()+1) + "-" + currentTime.getDate();
+          document.getElementById('userSelectDate').value = timeStr;
+
+          let rawDataGateA = [['gate','count'],['입장',0],['퇴장',0],['기록 없음',1]];
+          let rawDataGateB = [['gate','count'],['입장',0],['퇴장',0],['기록 없음',1]];
+
+          google.charts.load('current', { packages: ['corechart'] });
+          google.charts.setOnLoadCallback(drawGateAChart);
+          google.charts.setOnLoadCallback(drawGateBChart);
+
+          function drawGateAChart() {
+            try{
+              let data = google.visualization.arrayToDataTable(rawDataGateA);
+
+              let options = {
+                is3D : true, legend : 'none',
+                backgroundColor:'transparent',
+                slices : {
+                  is3D: true,legend : 'none',
+                  slices: {
+                    0: { color: '#6BE8CD' },
+                    1: { color: '#81FFC1' },
+                    2: { color: '#6BE886' },
+                    3: { color: '#81FF75' }
+                  },
+                  chartArea:{
+                    left:0,
+                    right:0, // !!! works !!!
+                    bottom:0,  // !!! works !!!
+                    top:0,
+                    width:"100%",
+                    height:"100%"
+                  }
+                }
+              };
+
+              let gateAChart = new google.visualization.PieChart(document.getElementById('chart-gateA'));
+              gateAChart.draw(data,options);
+            } catch(e) {
+              console.log("bug!"+e);
+            }
+          }
+
+          function drawGateBChart() {
+            try{
+              let data = google.visualization.arrayToDataTable(rawDataGateB);
+              let options = {
+                is3D : true, legend : 'none',
+                backgroundColor:'transparent',
+                slices : {
+                  is3D: true,legend : 'none',
+                  slices: {
+                    0: { color: '#E87838' },
+                    1: { color: '#FF714B' },
+                    2: { color: '#E84438' },
+                    3: { color: '#FF3D6F' }
+                  },
+                  chartArea:{
+                    left:0,
+                    right:0, // !!! works !!!
+                    bottom:0,  // !!! works !!!
+                    top:0,
+                    width:"100%",
+                    height:"100%"
+                  }
+                }
+              };
+
+              let gateBChart = new google.visualization.PieChart(document.getElementById('chart-gateB'));
+              gateBChart.draw(data,options);
+            } catch (e) {
+              console.log("bug!"+e);
+            }
+          }
+
+          reDraw = () => { setTimeout ( () => {
+            rawDataGateA = [['gate','count'],['입장',0],['퇴장',0]];
+            rawDataGateB = [['gate','count'],['입장',0],['퇴장',0]];
+            let allEntranceLog = queryAllHistory_result;
+            let noneGateARecord = true;
+            let noneGateBRecord = true;
+            let countA_in = 0;
+            let countA_out = 0;
+            let countB_in = 0;
+            let countB_out = 0;
+            let timeStrDotVersion = timeStr.replace(/[-]/g,'.')
+            for (let i = 0 ; i < allEntranceLog.length ; i ++) {
+                let targetTimeStamp = allEntranceLog[i].timestamp;
+                try {
+                  if (targetTimeStamp.split(' ').length != 2){
+                    let tempData = new Date(Number(allEntranceLog[i].timestamp))
+                    targetTimeStamp = tempData.getFullYear() + "."
+                    targetTimeStamp += tempData.getMonth()+1 + "."
+                    targetTimeStamp += tempData.getDate() + ""
+                  }
+                } catch (Error) {}
+
+                if (targetTimeStamp.split(' ')[0] == timeStrDotVersion) {
+                  //------------------------------------------------------------------------
+                  // gate_A의 로그
+                  //------------------------------------------------------------------------
+                  if (allEntranceLog[i].location == 'west'){
+                    let isEnter = (allEntranceLog[i].state == 'IN');
+                    noneGateARecord = false;
+
+                    if(isEnter) {
+                      countA_in = rawDataGateA[1][1] + 1;
+                      rawDataGateA.splice(1, 1);
+                      rawDataGateA.splice(1,0,['입장',countA_in]);
+                    } else {
+                      countA_out = rawDataGateA[2][1] + 1;
+                      rawDataGateA.splice(2, 1);
+                      rawDataGateA.splice(2,0,['퇴장',countA_out]);
+                    }
+                  //------------------------------------------------------------------------
+                  // gate_B의 로그
+                  //------------------------------------------------------------------------
+                  } else {
+                    let isEnter = (allEntranceLog[i].state == 'IN');
+                    noneGateBRecord = false;
+
+                    if(isEnter) {
+                      countB_in = rawDataGateB[1][1] + 1;
+                      rawDataGateB.splice(1, 1);
+                      rawDataGateB.splice(1,0,['입장',countB_in]);
+                    } else {
+                      countB_out = rawDataGateB[2][1] + 1;
+                      rawDataGateB.splice(2, 1);
+                      rawDataGateB.splice(2,0,['퇴장',countB_out]);
+                    }
+                  }
+                }
+              }
+
+              if (noneGateARecord) rawDataGateA.push(['기록 없음',1]);
+              else rawDataGateA.push(['기록 없음',0]);
+
+              if (noneGateBRecord) rawDataGateB.push(['기록 없음',1]);
+              else rawDataGateB.push(['기록 없음',0]);
+
+              drawGateAChart();
+              drawGateBChart();
+              document.getElementById('targetDate1').innerHTML = timeStr;
+              document.getElementById('targetDate2').innerHTML = timeStr;
+              document.getElementById('A_in').innerHTML = "" + countA_in;
+              document.getElementById('A_out').innerHTML = "" + countA_out;
+              document.getElementById('B_in').innerHTML = "" + countB_in;
+              document.getElementById('B_out').innerHTML = "" + countB_out;
+              document.getElementById('locationDiv').innerHTML = '전자관 6층 : ' + timeStr + ' 기록';
+            },1000);};
+
+            reDraw();
+          </script>
+				</td>
+			</tr>
+    </table>
+  </body>
+</html>

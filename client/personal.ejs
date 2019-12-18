@@ -1,0 +1,199 @@
+<!DOCTYPE html5>
+<html>
+  <head>
+    <link data-require="bootstrap@4.0.5" data-semver="4.0.5" rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" >
+    <script data-require="bootstrap@4.0.5" data-semver="4.0.5" src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.5/js/bootstrap.min.js"></script>
+    <script data-require="angularjs@1.5.7" data-semver="1.5.7" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular.min.js"></script>
+    <script src="personalApp.js" charset="UTF-8"></script>
+    <link rel="stylesheet" href="styleMainPage.css">
+    <title>Hyper Shield : 블록체인 기반의 출입 관리 시스템</title>
+		<script>
+      let userData = {};
+      try{
+        userData = {key:sessionStorage.getItem('uID').replace(/"/g,''), name:sessionStorage.getItem('uNAME')};
+      } catch(e) {
+        location.href="/";
+      }
+    </script>
+  </head>
+
+  <body style="margin:0px 0px 0px 0px; height:100%" ng-app="application" ng-controller="appController">
+    <table width="100%" style="height:100%; margin:0px 0px 0px 0px; border-collapse:collapse;">
+      <tr width="100%" height="180px">
+        <td bgcolor="#2E1257" style= "width:30%;min-width:180px border-collapse:collapse;" align="center" rowspan="3">
+
+          <table width="100%" height="100%">
+            <tr height="30%"><td align="center">
+                <table width="90%">
+                  <tr>
+                    <td width="30%"><img src="./img/icon/default.png" width="100%" style="min-width:100px" id="uImage"></td>
+                    <td width="5%"></td>
+                    <td width="75%">
+                      <font size="4"><div id='username'></div></font><font size="1"><br></font>
+                      &nbsp;&nbsp;<font color="white">등급 : 관리자 </font><font size="1"><br><br><br></font>
+                      <div align = "right"><button class="btn btn-primary" id="logout">로그아웃</button></div>
+                      <script>
+                        let userName = document.getElementById('username');
+                        userName.innerHTML = "<font color='yellow' size='5'>"+userData.name
+                          +"</font><font color='white'>님, 반갑습니다!</font>";
+                        let userImage = document.getElementById('uImage');
+                        userImage.src = "./img/icon/" + userData.key + ".png";
+                        let logoutBtn = document.getElementById('logout');
+                        logoutBtn.onclick = () => {
+                          sessionStorage.removeItem('uID');
+                          sessionStorage.removeItem('uNAME');
+                          location.href="/";
+                        };
+                      </script>
+                    </td>
+                  </tr>
+                </table>
+
+            </td></tr>
+            <tr height="50%"><td valign = "top" align="center">
+                <font color="white">
+                  <div style="width:90%">
+                    <h2>&nbsp;최근 출입 기록</h2>
+                    <hr style="border: solid 1px white;" width="90%">
+                  </div>
+                  <table width="90%" style="color:#BAB8DB">
+                    <tr align="center">
+                      <td><font size="4" color="white" width="60%" height="35px"><b>출입 시간</b></font></td>
+                      <td><font size="4" color="white" width="20%" height="35px"><b>디바이스</b></font></td>
+                      <td><font size="4" color="white" width="20%" height="35px"><b>입장/퇴장</b></font></td>
+                    </tr>
+                    <tr ng-repeat="temp in queryHistoryTop8_result" align="center">
+                      <td height="35px">{{temp.timestamp}}</td>
+                      <td height="35px">{{temp.location}}</td>
+                      <td height="35px">
+                        <span ng-show="temp.state == 'IN'">&nbsp;<font color="#A4FFA3">입장</font></span>
+                        <span ng-show="temp.state == 'OUT'">&nbsp;<font color="#FF7D6F">퇴장</font></span>
+                        <span ng-show="temp.state == 'GENERATED'">&nbsp;<font color="#A4FFA3">가입</font></span>
+                        <span ng-show="temp.state == 'EXPIRED'">&nbsp;<font color="#FF7D6F">탈퇴</font></span>
+                      </td>
+                    </tr>
+                  </table>
+                </font>
+            </td></tr>
+            <tr height="20%"><td align="center" valign="bottom">
+                <font color="gray">
+                  2019 한국 항공대학교 한정희 교수님 종합설계<br>
+                  <font size="2">임베디드 시스템 기반의 하이퍼레져를 이용한 출입 관제 시스템<br></font><br>
+                  <font color="white" size="4">정지원 이승준 김영찬 안종화</font><br>
+                  <font color="yellow">HYPER SHILED 1.0.0 ver</font>
+                </font>
+                <br><br>
+            </td></tr>
+
+          </table>
+        </td>
+
+        <td style="margin:0px 0px 0px 0px;padding:0px 50px 30px 50px;
+              border-collapse:collapse;
+              background-image:url('./img/bg3.png');
+              background-position:center center;
+              background-size: 100%" align="left" valign="bottom">
+                <b><font color="white" size="7"><div id ="titleName">
+                  개인 페이지
+                </div></font></b>
+        </td>
+      </tr>
+      <tr height="5px" bgcolor="#272822">
+        <td>
+          <table width="100%" style="color:white;">
+            <tr>
+              <td width="25%" align="center"><div class="menu" id="menu0">메인 페이지</div></td>
+              <td width="25%" align="center"><div class="menu" id="menu1">일별 출입량</div></td>
+              <td width="25%" align="center"><div class="menu" id="menu3">개인 페이지</div></td>
+              <td width="25%" align="center"><div class="menu" id="menu4">사용자 관리</div></td>
+              <script>
+                let menu0 = document.getElementById('menu0');
+                let menu1 = document.getElementById('menu1');
+                let menu3 = document.getElementById('menu3');
+                let menu4 = document.getElementById('menu4');
+
+                menu0.onclick = () => {location.href="/mainPage";};
+                menu1.onclick = () => {location.href="/dailyLog";};
+                menu3.onclick = () => {location.href="/personalPage";};
+                menu4.onclick = () => {location.href="/userManage";};
+
+              </script>
+            </tr>
+          </table>
+        </td>
+      </tr>
+
+      <tr>
+        <td align="center" height="calc(76% - 100px)">
+          <!-- ############################# 본문 내용 시작 #############################-->
+          <div style="margin:10px 10px 10px 10px;background-color:#DADEFF;width:70vw;min-width:180px;height:calc(76vh - 20px);">
+          <table width="90%" heigth="100%">
+            <tr height="10%" >
+              <td width="10%">
+                  <span id="profileImg">
+                    <image src="./img/icon/default.png" width="100%">
+                  </span>
+              </td>
+              <td width="5%">
+              </td>
+              <td width="75%">
+                  <span style="font-size:48px;color:rgb(22, 22, 22)">{{userName}}</span>
+                  <span style="font-size:24px;color:rgb(68, 68, 68)">님의 출입 이력</span><br />
+                  <input type="text" ng-model="personalNFC"/>
+                  <button ng-click="queryPersonalHistory()">쿼리하기</button>
+              </td>
+            </tr>
+            <tr height="5%"><td></td>
+            </tr>
+            <tr height="70%">
+              <table width="90%">
+                <tr height="6%">
+                  <td align ="center" bgcolor="#272822" style="border:1px solid white"><font color="white">트랜젝션</font></td>
+                  <td align ="center" bgcolor="#272822" style="border:1px solid white"><font color="white">출입 시간</font></td>
+                  <td align ="center" bgcolor="#272822" style="border:1px solid white"><font color="white">장소</font></td>
+                  <td align ="center" bgcolor="#272822" style="border:1px solid white"><font color="white">분류</font></td>
+                </tr>
+                <tr ng-repeat="temp2 in showingPersonalLog track by $index" height="4%">
+                  <td align ="center" style="border:1px solid #B5BA9E"> {{temp2.TxID}}</td>
+                  <td align ="center" style="border:1px solid #B5BA9E"> {{temp2.TimeStamp}}</td>
+                  <td align ="center" style="border:1px solid #B5BA9E"> {{temp2.location}}</td>
+                  <td align ="center" style="border:1px solid #B5BA9E"> <img src="./img/{{temp2.state}}.png" width="35px">
+                    <span ng-show="temp2.state == 'IN'">&nbsp;입장</span>
+                    <span ng-show="temp2.state == 'OUT'">&nbsp;퇴장</span>
+                    <span ng-show="temp2.state == 'GENERATED'">&nbsp;가입</span>
+                    <span ng-show="temp2.state == 'EXPIRED'">&nbsp;탈퇴</span>
+                  </td>
+                </tr>
+                <tr ng-show="personalLogs_isEmpty" height="60px">
+                  <td  colspan="4" align ="center" style="border:1px solid #B5BA9E">
+                    <b>해당 사용자를 찾을 수 없습니다.</b>
+                  </td>
+                </tr>
+                <tr>
+                  <td align ="center" colspan="4">
+                    <div class="pageBox" ng-hide="personalLogs_isEmpty" style="margin-top:20px;">
+                      <div ng-repeat="temp in pageNumArr"
+                        style="cursor:pointer;background-color: #272822; display: inline-block;border-radius: 7px;
+                        width:35px;height:35px;color:white;margin:0px 2px;padding:5px 5px;"
+                        ng-click="pagingPersonalLog(pageNumArr.indexOf(temp))">
+                        <span ng-show="currentPage == pageNumArr.indexOf(temp)"><font color="#9EB8E8"><u>{{pageNumArr.indexOf(temp)+1}}</u></font></span>
+                        <span ng-hide="currentPage == pageNumArr.indexOf(temp)">{{pageNumArr.indexOf(temp)+1}}</span>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              </table>
+            </tr>
+          </table>
+          </div>
+          <script>
+            setTimeout(()=>{
+              setInitUser(userData.key,userData.name)
+            },100)
+          </script>
+          <!-- ############################# 본문 내용 종료 #############################-->
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>

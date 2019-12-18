@@ -1,0 +1,51 @@
+<html>
+  <head>
+    <link data-require="bootstrap@4.0.5" data-semver="4.0.5" rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" >
+    <script data-require="bootstrap@4.0.5" data-semver="4.0.5" src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.5/js/bootstrap.min.js"></script>
+    <script data-require="angularjs@1.5.7" data-semver="1.5.7" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular.min.js"></script>
+    <script src="loginProcessApp.js" charset="UTF-8"></script>
+    <script src="localIP.js" charset="UTF-8"></script>
+  </head>
+
+  <body ng-app="application" ng-controller="appController"
+    style="margin:0px 0px 0px 0px;width:100%;height:100%;
+  	background-image:url('./img/bg2.png');
+  	background-position:center center">
+
+    <div style="position:absolute;width:400px;height:250px;left:50%;top:50%;margin-left:-200px;margin-top:-125px;">
+      <center>
+	<image src="./img/logining.gif" width="60%"><br>
+         <h2><font color="white">사용자 로그인 중...</font></h2>
+   	 </center>
+    </div>
+
+    <script>
+      let getID ='<%= id%>';
+      let result;
+      getLocalIPs(function(ips) { // <!-- ips is an array of local IP addresses.
+        localIP = ips.toString()
+
+        setTimeout( () => {
+          result = queryEnterance(getID,localIP);
+        }, 1)
+        setTimeout( () => {
+          try{
+              console.log(queryEnterance_result);
+              if (queryEnterance_result != undefined) {
+                try {
+                  sessionStorage.setItem("uID", JSON.stringify(getID));
+                  sessionStorage.setItem("uNAME", JSON.stringify(queryEnterance_result.data.name));
+                  location.href="/mainPage";
+                  } catch (e) {
+                  alert("세션 저장중 에러..!\n"+e);
+                }
+              }
+              else {alert("로그인 실패... 관리자에게 문의하세요"); location.href="/"};
+          } catch (e) {
+            console.log('error' +e);
+          }
+        } ,2000);
+      });
+    </script>
+  </body>
+</html>

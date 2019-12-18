@@ -1,0 +1,54 @@
+<!DOCTYPE html5>
+<html>
+  <head>
+    <link data-require="bootstrap@4.0.5" data-semver="4.0.5" rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" >
+    <script data-require="bootstrap@4.0.5" data-semver="4.0.5" src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.5/js/bootstrap.min.js"></script>
+    <script data-require="angularjs@1.5.7" data-semver="1.5.7" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+    <script>
+      let userData = {};
+      try{
+        userData = {key:(parseInt(sessionStorage.getItem('uID').replace(/["]/g,''))), name:sessionStorage.getItem('uNAME')};
+        location.href="/mainPage";
+      } catch(e) {}
+    </script>
+    <title>Hyper Shield : 블록체인 기반의 출입 관리 시스템</title>
+  </head>
+
+  <body style="margin:0px 0px 0px 0px; height:100%">
+    <table width="100%" style="height:100%; margin:0px 0px 0px 0px; border-collapse:collapse;">
+      <tr>
+        <td bgcolor="#2E1257" style="width:30%;min-width:180px" align="center">
+          <img src="./img/hyperledger.png" width="50%"><br>
+          <font size="3" color="white">하이퍼쉴드 : 블록체인 기반의 출입 관리 시스템</font><br>
+          <hr color="white" width="80%">
+          <font size="7" color="white">관리자 로그인</font>
+          <br><br><br>
+          <div style="width:80%">
+            <form method="post" action="/loginProcess">
+              <div class="input-group" style="border: 0px;">
+                <div class="input-group-addon" style="width:40%;">
+                  <span class="input-group-text">NFC</span>
+                </div>
+                <input type="text" class="form-control" name="id" style="border: 0px; " placeholder="ID를 입력하세요.">
+              </div>
+              <br>
+              <button type="submit" style="width:100%" class="btn btn-primary">로그인</button>
+            </form>
+            <br><br><br>
+            <font size="4" color="white">Entracne Management System<br>Based on Hyperledger Fabric</font><br>
+          </div>
+        </td>
+
+        <td style="background-image:url('./img/bg.png');
+		background-position:center center" align="center">
+          <img src="./img/logo_White.png" width="80%"><br><br><br><br><br>
+          <font size="6" color="white">2019 한정희 교수님 종합설계 프로젝트</font><br><br>
+          <font size="5" color="white">
+            정지원 이승준 김영찬 안종화
+          </font>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>

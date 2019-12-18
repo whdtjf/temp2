@@ -1,0 +1,38 @@
+.menu:hover{
+  color:gray;
+  cursor: pointer;
+}
+
+.searchTotalBox{
+  background-color: #2E1257;
+  color:white;
+  padding:10px;
+  border-radius: 20px;
+  display: inline;
+}
+
+.searchTotalBox img {
+  padding 0px;
+  margin 0px;
+  display:inline;
+  cursor:pointer;
+}
+
+.dateField{
+  border:none;
+  outline:none;
+  border-radius: 50px;
+  padding-right:5px;
+  text-align: center;
+}
+
+.scroll {
+  transition:0.2s;
+  height:0px !important;
+  width:0px !important;
+}
+
+.searchTotalBox:hover > .scroll{
+  height:25px !important;
+  width:150px !important;
+}
